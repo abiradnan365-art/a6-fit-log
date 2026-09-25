@@ -11,11 +11,6 @@ const oswald = Oswald({
 
 const getExercises = async (): Promise<IFitness[]> => {
     const res = await fetch("https://api.abcz.workers.dev/api/fitlog");
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch exercises");
-    }
-
     return res.json();
 };
 

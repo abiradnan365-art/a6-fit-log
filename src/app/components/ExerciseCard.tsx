@@ -9,7 +9,7 @@ const oswald = Oswald({ subsets: ['latin'] });
 
 const ExerciseCard = ({ exercise }: { exercise: IFitness }) => {
     return (
-        <Link href={`/exercises/${exercise.id}`}>
+        <Link  href={`/exercises/${exercise.id}`}>
             <div className="group overflow-hidden rounded-xl border border-gray-500 bg-gray-900 transition-all duration-300 hover:-translate-y-1 hover:border-[#C2F800]">
 
                
