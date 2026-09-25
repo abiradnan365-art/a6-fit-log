@@ -16,7 +16,7 @@ const Navber = () => {
     </>
 
     return (
-        <nav className='sticky top-0 z-50 w-full'> 
+        <nav className='sticky top-0 z-50 w-full bg-black'>
 
             <div className="navbar container mx-auto ">
                 <div className="navbar-start">
@@ -48,10 +48,10 @@ const Navber = () => {
                     <a className="btn">Button</a>
                 </div>
             </div>
-           <hr className='text-gray-800'/>
+            <hr className='text-gray-800' />
         </nav>
-   
-); 
+
+    );
 };
 
 export default Navber;

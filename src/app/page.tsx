@@ -1,9 +1,14 @@
 import React from 'react';
+import Hero from './components/Hero';
+
+import { IFitness } from '@/type/fitness';
+import ExercisePage from './exercises/page';
 
 const page = () => {
   return (
     <div>
-      homes
+      <Hero></Hero>
+      <ExercisePage></ExercisePage>
     </div>
   );
 };
