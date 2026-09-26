@@ -9,7 +9,10 @@ import { ExercisesContext } from '@/context/ExercisesContext';
 const oswald = Oswald({ subsets: ['latin'] });
 
 const Navber = () => {
-    const { addPlan, saveList } = useContext(ExercisesContext);
+    const { addPlan = [], saveList = [] } = useContext(ExercisesContext) as {
+        addPlan: unknown[];
+        saveList: unknown[];
+    };
     const pathname = usePathname();
     const links = <>
         <li><Link className={pathname === '/' ? 'text-lime-500' : ''} href='/'>Workouts</Link></li>
@@ -47,19 +50,23 @@ const Navber = () => {
                     </ul>
                 </div>
                 <div className="navbar-end flex items-center gap-4">
-                    <div>
-                        <span>Plan</span>
-                        <span className="badge bg-lime-500 text-black ml-1">
-                            {addPlan.length} 
-                        </span>
-                    </div>
+                    <Link href="/my-plan">
+                        <div>
+                            <span>Plan</span>
+                            <span className="badge bg-lime-500 text-black ml-1">
+                                {addPlan.length}
+                            </span>
+                        </div>
+                    </Link>
 
-                    <div>
-                        <span>Saved</span>
-                        <span className="badge ml-1">
-                            {saveList.length}
-                        </span>
-                    </div>
+                    <Link href="/my-plan">
+                        <div>
+                            <span>Saved</span>
+                            <span className="badge badge-outline ml-1">
+                                {saveList.length}
+                            </span>
+                        </div>
+                    </Link>
                 </div>
             </div>
             <hr className='text-gray-800' />

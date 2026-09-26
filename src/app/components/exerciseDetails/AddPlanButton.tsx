@@ -39,7 +39,7 @@ const AddPlanButton = ({ exercise }: AddPlanButtonProps): ReactElement => {
     return (
         <button className="btn border-none bg-[#C2F800] px-5 text-xs font-bold text-black hover:bg-[#d4ff35]" onClick={() => handleAddExercise()}>
             <IoAddCircleSharp />
-            Add to today's plan
+            Add to{` today's`} plan
         </button>
     );
 };

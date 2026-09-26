@@ -3,8 +3,8 @@ import Image from 'next/image';
 import React from 'react';
 import { FaClock, FaFire, FaStar } from "react-icons/fa";
 import { Oswald } from 'next/font/google';
-import { IoAddCircleSharp } from 'react-icons/io5';
-import { MdOutlineBookmarkAdd } from 'react-icons/md';
+
+
 import AddPlanButton from '@/app/components/exerciseDetails/AddPlanButton';
 import SaveButton from '@/app/components/exerciseDetails/SaveButton';
 const oswald = Oswald({
