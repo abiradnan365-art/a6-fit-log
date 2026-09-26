@@ -11,7 +11,7 @@ const Navber = () => {
     const pathname = usePathname();
     const links = <>
         <li><Link className={pathname === '/' ? 'text-lime-500' : ''} href='/'>Workouts</Link></li>
-        <li> <Link href='/'>item 2</Link></li>
+        <li> <Link className={pathname === '/my-plan' ? 'text-lime-500' : ''} href='/my-plan'>My Plan</Link></li>
 
     </>
 

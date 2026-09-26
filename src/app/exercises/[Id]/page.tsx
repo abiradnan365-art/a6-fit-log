@@ -5,6 +5,8 @@ import { FaClock, FaFire, FaStar } from "react-icons/fa";
 import { Oswald } from 'next/font/google';
 import { IoAddCircleSharp } from 'react-icons/io5';
 import { MdOutlineBookmarkAdd } from 'react-icons/md';
+import AddPlanButton from '@/app/components/exerciseDetails/AddPlanButton';
+import SaveButton from '@/app/components/exerciseDetails/SaveButton';
 const oswald = Oswald({
     subsets: ['latin'],
 });
@@ -67,7 +69,7 @@ const ExerciseDetailsPage = async ({ params }: IExerciseDetailsPageProps) => {
                             {exercise.name}
                         </h1>
 
-                        {/* Description */}
+                        
                         <p className="mt-3 text-sm leading-6 text-gray-400">
                             {exercise.description}
                         </p>
@@ -118,6 +120,7 @@ const ExerciseDetailsPage = async ({ params }: IExerciseDetailsPageProps) => {
                                 <span className="text-xs text-gray-200">
                                     {exercise.sets}
                                 </span>
+
                             </div>
 
                             
@@ -196,15 +199,9 @@ const ExerciseDetailsPage = async ({ params }: IExerciseDetailsPageProps) => {
                         
                         <div className="mt-7 flex flex-wrap gap-3">
 
-                            <button className="btn border-none bg-[#C2F800] px-5 text-xs font-bold text-black hover:bg-[#d4ff35]">
-                                <IoAddCircleSharp />
-                                Add to today's plan
-                            </button>
+                           <AddPlanButton exercise={exercise} />
 
-                            <button className="btn border border-[#3a3e42] bg-transparent px-5 text-xs font-medium text-gray-300 hover:border-[#C2F800] hover:bg-transparent hover:text-white">
-                                <MdOutlineBookmarkAdd />
-                                Save for later
-                            </button>
+                           <SaveButton exercise={exercise}></SaveButton>
 
                         </div>
 
