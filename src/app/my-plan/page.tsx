@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaCheck, FaClock, FaFire, FaStar } from "react-icons/fa";
 import { RxCross2 } from 'react-icons/rx';
+import { toast } from 'react-toastify';
 
 interface ExerciseItem {
     id: string | number;
@@ -21,6 +22,8 @@ interface ExerciseItem {
 interface ExerciseContextValue {
     addPlan: ExerciseItem[];
     saveList: ExerciseItem[];
+    setAddPlan: React.Dispatch<React.SetStateAction<ExerciseItem[]>>;
+    setSaveList: React.Dispatch<React.SetStateAction<ExerciseItem[]>>;
 }
 
 type ExerciseTab = 'plan' | 'saved';
@@ -29,11 +32,41 @@ const oswald = Oswald({ subsets: ['latin'] });
 
 const MyPlanPage = () => {
 
-
+    const [completedIds, setCompletedIds] = useState<(string | number)[]>([]);
 
     const [activeTab, setActiveTab] = useState<ExerciseTab>('plan');
 
-    const { addPlan, saveList } = useContext(ExercisesContext) as ExerciseContextValue;
+    const { addPlan, saveList, setAddPlan, setSaveList } = useContext(ExercisesContext) as ExerciseContextValue;
+
+    const handleMarkAsDone = (id: string | number) => {
+
+        if (completedIds.includes(id)) {
+            return;
+        }
+
+        setCompletedIds((prev) => [...prev, id]);
+
+        toast.success('Exercise marked as done!');
+    };
+
+    const handleRemove = (id: string | number) => {
+
+        if (activeTab === 'plan') {
+            setAddPlan((prev) =>
+                prev.filter((exercise) => exercise.id !== id)
+            );
+        } else {
+            setSaveList((prev) =>
+                prev.filter((exercise) => exercise.id !== id)
+            );
+        }
+
+        setCompletedIds((prev) =>
+            prev.filter((completedId) => completedId !== id)
+        );
+
+        toast.error('Exercise removed!');
+    };
 
     const totalMinutes: number = addPlan.reduce<number>((sum: number, exercise: ExerciseItem) => sum + (exercise.duration || 0), 0);
     const totalCalories: number = addPlan.reduce<number>((sum: number, exercise: ExerciseItem) => sum + (exercise.caloriesBurned || 0), 0);
@@ -48,7 +81,7 @@ const MyPlanPage = () => {
             <h2 className={`${oswald.className} text-4xl font-bold mt-11`}>MY PLAN</h2>
             <p className='text-gray-500 mt-2'>Cap of five lifts for today. Finish them, then load more.</p>
             <div>
-                <div className='grid grid-cols-3 border border-dashed border-blue-500 mt-8 p-6'>
+                <div className='grid grid-cols-3 border border-dashed border-gray-500 rounded-2xl mt-8 p-6 mb-9'>
 
                     <div>
                         <p className='text-gray-500'>Exercises</p>
@@ -86,7 +119,7 @@ const MyPlanPage = () => {
                         {
                             addPlan.length > 0 ?
                                 (activeExercises.map((exercise, index) => (
-                                   <div
+                                    <div
                                         key={exercise.id}
                                         className="bg-black/95 text-gray-100 p-5 rounded-2xl flex items-center gap-6 shadow-xl border border-gray-800"
                                     >
@@ -116,8 +149,8 @@ const MyPlanPage = () => {
 
                                                 {/* Time */}
                                                 <div className="flex items-center gap-1.5">
-                                        
-                                                    <FaClock/>
+
+                                                    <FaClock />
                                                     <span>
                                                         {exercise.duration ?? 0} min
                                                     </span>
@@ -125,7 +158,7 @@ const MyPlanPage = () => {
 
                                                 {/* Calories */}
                                                 <div className="flex items-center gap-1.5">
-                                                    <FaFire/>
+                                                    <FaFire />
 
                                                     <span>
                                                         {exercise.caloriesBurned ?? 0} kcal
@@ -134,7 +167,7 @@ const MyPlanPage = () => {
 
                                                 {/* Rating */}
                                                 <div className="flex items-center gap-1.5">
-                                                    <FaStar/>
+                                                    <FaStar />
 
                                                     <span className="font-medium text-white">
                                                         {exercise.rating?.toFixed(1) ?? 'N/A'}
@@ -157,13 +190,29 @@ const MyPlanPage = () => {
                                             {/* Mark as Done */}
                                             <button
                                                 type="button"
-                                                className="flex items-center gap-1.5 text-sm px-6 py-2.5 rounded-full bg-[#CCEE22] text-black font-extrabold hover:bg-[#BBDD11] transition"
+                                                disabled={completedIds.includes(exercise.id)}
+                                                onClick={() => handleMarkAsDone(exercise.id)}
+                                                className={`flex items-center gap-1.5 text-sm px-6 py-2.5 rounded-full font-extrabold transition ${completedIds.includes(exercise.id)
+                                                    ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+                                                    : 'bg-lime-500 text-black hover:bg-lime-700'
+                                                    }`}
                                             >
                                                 <FaCheck />
 
-                                                <span>Mark as Done</span>
+                                                <span>
+                                                    {completedIds.includes(exercise.id)
+                                                        ? 'Completed'
+                                                        : 'Mark as Done'}
+                                                </span>
                                             </button>
-                                            <RxCross2 />
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemove(exercise.id)}
+                                                className="text-gray-400 hover:text-red-500 transition text-2xl"
+                                                aria-label={`Remove ${exercise.name}`}
+                                            >
+                                                <RxCross2 />
+                                            </button>
                                         </div>
                                     </div>
                                 ))) : (
@@ -191,7 +240,7 @@ const MyPlanPage = () => {
                             saveList.length > 0 ?
 
                                 (activeExercises.map((exercise) => (
-                                     <div
+                                    <div
                                         key={exercise.id}
                                         className="bg-black/95 text-gray-100 p-5 rounded-2xl flex items-center gap-6 shadow-xl border border-gray-800"
                                     >
@@ -221,8 +270,8 @@ const MyPlanPage = () => {
 
                                                 {/* Time */}
                                                 <div className="flex items-center gap-1.5">
-                                        
-                                                    <FaClock/>
+
+                                                    <FaClock />
                                                     <span>
                                                         {exercise.duration ?? 0} min
                                                     </span>
@@ -230,7 +279,7 @@ const MyPlanPage = () => {
 
                                                 {/* Calories */}
                                                 <div className="flex items-center gap-1.5">
-                                                    <FaFire/>
+                                                    <FaFire />
 
                                                     <span>
                                                         {exercise.caloriesBurned ?? 0} kcal
@@ -239,7 +288,7 @@ const MyPlanPage = () => {
 
                                                 {/* Rating */}
                                                 <div className="flex items-center gap-1.5">
-                                                    <FaStar/>
+                                                    <FaStar />
 
                                                     <span className="font-medium text-white">
                                                         {exercise.rating?.toFixed(1) ?? 'N/A'}
@@ -259,7 +308,14 @@ const MyPlanPage = () => {
                                                 View Details
                                             </Link>
 
-                                            <RxCross2 />
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemove(exercise.id)}
+                                                className="text-gray-400 hover:text-red-500 transition text-2xl"
+                                                aria-label={`Remove ${exercise.name}`}
+                                            >
+                                                <RxCross2 />
+                                            </button>
                                         </div>
                                     </div>
                                 )))
@@ -279,7 +335,7 @@ const MyPlanPage = () => {
 
             </div>
         </div>
-        // </div>
+
     );
 };
 

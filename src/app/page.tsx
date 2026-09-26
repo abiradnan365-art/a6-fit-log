@@ -11,7 +11,7 @@ const page = () => {
     <div>
       <Hero></Hero>
       <ExercisePage></ExercisePage>
-      <MyPlanPage></MyPlanPage>
+      
      
     </div>
   );
