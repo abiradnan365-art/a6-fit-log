@@ -1,13 +1,15 @@
 'use client'
-import React from 'react';
+import React, { useContext } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import logo from '@/assets/logo.png'
 import { Oswald } from 'next/font/google';
+import { ExercisesContext } from '@/context/ExercisesContext';
 const oswald = Oswald({ subsets: ['latin'] });
-const Navber = () => {
 
+const Navber = () => {
+    const { addPlan, saveList } = useContext(ExercisesContext);
     const pathname = usePathname();
     const links = <>
         <li><Link className={pathname === '/' ? 'text-lime-500' : ''} href='/'>Workouts</Link></li>
@@ -16,9 +18,9 @@ const Navber = () => {
     </>
 
     return (
-        <nav className='sticky top-0 z-50 w-full bg-black'>
+        <nav className='sticky top-0 z-50 w-full bg-black '>
 
-            <div className="navbar container mx-auto ">
+            <div className="navbar container mx-auto  ">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -44,8 +46,20 @@ const Navber = () => {
                         {links}
                     </ul>
                 </div>
-                <div className="navbar-end">
-                    <a className="btn">Button</a>
+                <div className="navbar-end flex items-center gap-4">
+                    <div>
+                        <span>Plan</span>
+                        <span className="badge bg-lime-500 text-black ml-1">
+                            {addPlan.length} 
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>Saved</span>
+                        <span className="badge ml-1">
+                            {saveList.length}
+                        </span>
+                    </div>
                 </div>
             </div>
             <hr className='text-gray-800' />

@@ -2,6 +2,8 @@
 import { ExercisesContext } from '@/context/ExercisesContext';
 import React, { useContext, useState } from 'react';
 import { Oswald } from "next/font/google";
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 interface ExerciseItem {
     id: string | number;
@@ -20,6 +22,8 @@ type ExerciseTab = 'plan' | 'saved';
 const oswald = Oswald({ subsets: ['latin'] });
 
 const MyPlanPage = () => {
+
+   
 
     const [activeTab, setActiveTab] = useState<ExerciseTab>('plan');
 
@@ -94,7 +98,13 @@ const MyPlanPage = () => {
                                 </div>
                             </div>
                         ))): (
-                            <p>No exercises in today's plan.</p>
+                            <div className='text-center py-10'>
+                                 <h2 className={`${oswald.className} text-3xl`} >NOTHING HERE YET.</h2>
+                                 <p className='text-gray-500'>Browse the library and add a lift to get today moving.</p>
+                                 <Link href={'/'} className='inline-block bg bg-lime-500 px-4 py-3 rounded-2xl mt-6 text-black' >Go to workouts</Link>
+                            </div>
+                           
+                            
                         )
                         }
                     </div>
@@ -129,34 +139,18 @@ const MyPlanPage = () => {
                                 </div>
                             </div>
                         ))): (
-                            <p>No exercises in save list.</p>
+                            <div className='text-center py-10'>
+                                 <h2 className={`${oswald.className} text-3xl`} >NOTHING HERE YET.</h2>
+                                 <p className='text-gray-500'>Browse the library and add a lift to get today moving.</p>
+                                 <Link href={'/'} className='inline-block bg bg-lime-500 px-4 py-3 rounded-2xl mt-6 text-black' >Go to workouts</Link>
+                            </div>
                         )
                         }
                     </div>
 
                 </div>
 
-                {/* <div className='mt-8 space-y-4'>
-
-                    {activeTab.map((exercise, index) => (
-                        <div
-                            key={exercise.id}
-                            className='border p-5 rounded-lg'
-                        >
-                            <p className='text-gray-500'>
-                                Exercise {index + 1}
-                            </p>
-
-                            <h2 className='text-xl font-bold'>
-                                {exercise.name}
-                            </h2>
-
-                            <div className='flex gap-6 mt-2 text-gray-500'>
-                                <p>{exercise.duration} minutes</p>
-                                <p>{exercise.caloriesBurned} calories</p>
-                            </div>
-                        </div>
-                    ))} */}
+                
 
                 </div>
             </div>

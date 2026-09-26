@@ -10,16 +10,28 @@ interface SavedButtonProps {
 }
 
 const SaveButton = ({ exercise }: SavedButtonProps): ReactElement => {
-    const {saveList, setSaveList} = useContext(ExercisesContext) as {
+    const { saveList, setSaveList } = useContext(ExercisesContext) as {
         saveList: IFitness[];
         setSaveList: React.Dispatch<React.SetStateAction<IFitness[]>>;
     };
-
     const handleAddExercise = () => {
-        console.log('saved  btn clickd', exercise);
+        console.log('saved btn clicked', exercise);
 
-        setSaveList((prevSaveList: IFitness[]) => [...prevSaveList, exercise]);
-        toast.success(`You have saved ${exercise.name}`)
+        const alreadySaved = saveList.some(
+            (item) => item.id === exercise.id
+        );
+
+        if (alreadySaved) {
+            toast.info(`${exercise.name} is already saved`);
+            return;
+        }
+
+        setSaveList((prevSaveList: IFitness[]) => [
+            ...prevSaveList,
+            exercise
+        ]);
+
+        toast.success(`You have saved ${exercise.name}`);
     };
     return (
         <button className="btn border border-[#3a3e42] bg-transparent px-5 text-xs font-medium text-gray-300 hover:border-[#C2F800] hover:bg-transparent hover:text-white" onClick={() => handleAddExercise()}>

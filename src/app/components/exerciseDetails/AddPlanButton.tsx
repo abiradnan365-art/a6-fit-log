@@ -7,21 +7,33 @@ import { toast } from 'react-toastify';
 
 interface AddPlanButtonProps {
     exercise: IFitness;
-    
+
 }
 
 const AddPlanButton = ({ exercise }: AddPlanButtonProps): ReactElement => {
-    const {addPlan, setAddPlan } = useContext(ExercisesContext) as {
+    const { addPlan, setAddPlan } = useContext(ExercisesContext) as {
         addPlan: IFitness[];
         setAddPlan: React.Dispatch<React.SetStateAction<IFitness[]>>;
-        
-    };
 
+    };
     const handleAddExercise = () => {
         console.log('exercise btn clickd', exercise);
 
-        setAddPlan((prevAddPlan: IFitness[]) => [...prevAddPlan, exercise]);
-        toast.success(`You have added ${exercise.name}`)
+        const alreadyAdded = addPlan.some(
+            (item) => item.id === exercise.id
+        );
+
+        if (alreadyAdded) {
+            toast.info(`${exercise.name} is already in today's plan`);
+            return;
+        }
+
+        setAddPlan((prevAddPlan: IFitness[]) => [
+            ...prevAddPlan,
+            exercise
+        ]);
+
+        toast.success(`You have added ${exercise.name}`);
     };
 
     return (
