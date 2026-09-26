@@ -2,12 +2,13 @@
 import { ExercisesContext } from '@/context/ExercisesContext';
 import React, { useContext, useState } from 'react';
 import { Oswald } from "next/font/google";
-import { useRouter } from 'next/router';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaCheck, FaClock, FaFire, FaStar } from "react-icons/fa";
 import { RxCross2 } from 'react-icons/rx';
 import { toast } from 'react-toastify';
+
 
 interface ExerciseItem {
     id: string | number;
@@ -28,15 +29,45 @@ interface ExerciseContextValue {
 
 type ExerciseTab = 'plan' | 'saved';
 
+
+
 const oswald = Oswald({ subsets: ['latin'] });
 
 const MyPlanPage = () => {
 
+    const { addPlan, saveList, setAddPlan, setSaveList } = useContext(ExercisesContext) as ExerciseContextValue;
+
+    const [shortBy, setShortBy] = useState<"Duration" | "Calories" | "Rating">("Duration")
+    console.log(shortBy, "shortBy");
+
+    const shortExercise = (exercises: ExerciseItem[]) => {
+        const sortedExercises = [...exercises];
+
+        if (shortBy === "Duration") {
+            sortedExercises.sort(
+                (a, b) => Number(b.duration ?? 0) - Number(a.duration ?? 0)
+            );
+        } else if (shortBy === "Calories") {
+            sortedExercises.sort(
+                (a, b) =>
+                    Number(b.caloriesBurned ?? 0) -
+                    Number(a.caloriesBurned ?? 0)
+            );
+        } else if (shortBy === "Rating") {
+            sortedExercises.sort(
+                (a, b) => Number(b.rating ?? 0) - Number(a.rating ?? 0)
+            );
+        }
+
+        return sortedExercises;
+    };
+
+    const shortedAddPlans = shortExercise(addPlan);
+    const shortedSaveList = shortExercise(saveList);
+
     const [completedIds, setCompletedIds] = useState<(string | number)[]>([]);
 
     const [activeTab, setActiveTab] = useState<ExerciseTab>('plan');
-
-    const { addPlan, saveList, setAddPlan, setSaveList } = useContext(ExercisesContext) as ExerciseContextValue;
 
     const handleMarkAsDone = (id: string | number) => {
 
@@ -72,15 +103,17 @@ const MyPlanPage = () => {
     const totalCalories: number = addPlan.reduce<number>((sum: number, exercise: ExerciseItem) => sum + (exercise.caloriesBurned || 0), 0);
     const totalMinutes2: number = saveList.reduce<number>((sum: number, exercise: ExerciseItem) => sum + (exercise.duration || 0), 0);
     const totalCalories2: number = saveList.reduce<number>((sum: number, exercise: ExerciseItem) => sum + (exercise.caloriesBurned || 0), 0);
-    const activeExercises: ExerciseItem[] = activeTab === 'plan' ? addPlan : saveList;
+    const activeExercises: ExerciseItem[] =
+        activeTab === 'plan' ? shortedAddPlans : shortedSaveList;
 
     console.log(addPlan, "addPlan")
     console.log(saveList, "saveList");
     return (
-        <div className='container mx-auto'>
+        <div className='container mx-auto mb-28'>
             <h2 className={`${oswald.className} text-4xl font-bold mt-11`}>MY PLAN</h2>
             <p className='text-gray-500 mt-2'>Cap of five lifts for today. Finish them, then load more.</p>
             <div>
+                {/* info */}
                 <div className='grid grid-cols-3 border border-dashed border-gray-500 rounded-2xl mt-8 p-6 mb-9'>
 
                     <div>
@@ -105,8 +138,22 @@ const MyPlanPage = () => {
                     </div>
 
                 </div>
+
+
+
+                <div className='flex items-center gap-3 justify-end'>
+                    <p className='text-gray-500'>Short by</p>
+                    <select value={shortBy} onChange={(e) => setShortBy(e.target.value as "Duration" | "Calories" | "Rating")} className="select select-success">
+                        <option disabled={true}>Short By</option>
+                        <option value={"Duration"}>Duration</option>
+                        <option value={"Calories"}>Calories</option>
+                        <option value={"Rating"}>Rating</option>
+                    </select>
+                </div>
+
                 {/* name of each tab group should be unique */}
-                <div className="tabs tabs-lift">
+                <div className="tabs tabs-lift ">
+
                     <input
                         type="radio"
                         name="my_tabs_3"
@@ -126,7 +173,7 @@ const MyPlanPage = () => {
                                         {/* Exercise Image */}
                                         <div className="w-24 h-24 overflow-hidden rounded-xl bg-gray-900 flex-shrink-0">
                                             <Image
-                                                src={exercise.image}
+                                                src={exercise.image || ''}
                                                 alt={exercise.name}
                                                 width={96}
                                                 height={96}
@@ -247,7 +294,7 @@ const MyPlanPage = () => {
                                         {/* Exercise Image */}
                                         <div className="w-24 h-24 overflow-hidden rounded-xl bg-gray-900 flex-shrink-0">
                                             <Image
-                                                src={exercise.image}
+                                                src={exercise.image || ''}
                                                 alt={exercise.name}
                                                 width={96}
                                                 height={96}
@@ -329,12 +376,15 @@ const MyPlanPage = () => {
                         }
                     </div>
 
+
                 </div>
 
 
-
             </div>
+
+
         </div>
+
 
     );
 };

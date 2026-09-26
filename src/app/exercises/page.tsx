@@ -19,10 +19,10 @@ const ExercisePage = async () => {
     const exercises = await getExercises();
 
     return (
-        <div className="min-h-screen bg-[#0d0f10]">
+        <div className="min-h-screen mb-19  ">
 
             {/* Heading */}
-            <div className="container mx-auto px-4 pt-18 pb-10">
+            <div className="container mx-auto  px-4 pt-18 pb-10">
                 <h1
                     className={`${oswald.className} text-4xl font-bold text-white`}
                 >
