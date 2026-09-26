@@ -4,12 +4,18 @@ import React, { useContext, useState } from 'react';
 import { Oswald } from "next/font/google";
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
+import { FaCheck, FaClock, FaFire, FaStar } from "react-icons/fa";
+import { RxCross2 } from 'react-icons/rx';
 
 interface ExerciseItem {
     id: string | number;
     name: string;
     duration?: number;
     caloriesBurned?: number;
+    image?: string;
+    equipment?: string;
+    rating?: number;
 }
 
 interface ExerciseContextValue {
@@ -23,7 +29,7 @@ const oswald = Oswald({ subsets: ['latin'] });
 
 const MyPlanPage = () => {
 
-   
+
 
     const [activeTab, setActiveTab] = useState<ExerciseTab>('plan');
 
@@ -78,34 +84,97 @@ const MyPlanPage = () => {
                     />
                     <div className="tab-content bg-base-100 border-base-300 p-6">
                         {
-                        addPlan.length > 0 ? 
-                        (activeExercises.map((exercise, index) => (
-                            <div
-                                key={exercise.id}
-                                className='border p-5 rounded-lg'
-                            >
-                                <p className='text-gray-500'>
-                                    Exercise {index + 1}
-                                </p>
+                            addPlan.length > 0 ?
+                                (activeExercises.map((exercise, index) => (
+                                   <div
+                                        key={exercise.id}
+                                        className="bg-black/95 text-gray-100 p-5 rounded-2xl flex items-center gap-6 shadow-xl border border-gray-800"
+                                    >
+                                        {/* Exercise Image */}
+                                        <div className="w-24 h-24 overflow-hidden rounded-xl bg-gray-900 flex-shrink-0">
+                                            <Image
+                                                src={exercise.image}
+                                                alt={exercise.name}
+                                                width={96}
+                                                height={96}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
 
-                                <h2 className='text-xl font-bold'>
-                                    {exercise.name}
-                                </h2>
+                                        {/* Exercise Details */}
+                                        <div className="flex-1 space-y-2">
+                                            <h2 className="text-xl font-extrabold uppercase tracking-tight text-white">
+                                                {exercise.name}
+                                            </h2>
 
-                                <div className='flex gap-6 mt-2 text-gray-500'>
-                                    <p>{exercise.duration} minutes</p>
-                                    <p>{exercise.caloriesBurned} calories</p>
-                                </div>
-                            </div>
-                        ))): (
-                            <div className='text-center py-10'>
-                                 <h2 className={`${oswald.className} text-3xl`} >NOTHING HERE YET.</h2>
-                                 <p className='text-gray-500'>Browse the library and add a lift to get today moving.</p>
-                                 <Link href={'/'} className='inline-block bg bg-lime-500 px-4 py-3 rounded-2xl mt-6 text-black' >Go to workouts</Link>
-                            </div>
-                           
-                            
-                        )
+                                            <p className="text-sm font-medium text-gray-400 capitalize">
+                                                {exercise.equipment}
+                                            </p>
+
+                                            {/* Stats */}
+                                            <div className="flex items-center gap-5 mt-2 text-sm text-gray-300">
+
+                                                {/* Time */}
+                                                <div className="flex items-center gap-1.5">
+                                        
+                                                    <FaClock/>
+                                                    <span>
+                                                        {exercise.duration ?? 0} min
+                                                    </span>
+                                                </div>
+
+                                                {/* Calories */}
+                                                <div className="flex items-center gap-1.5">
+                                                    <FaFire/>
+
+                                                    <span>
+                                                        {exercise.caloriesBurned ?? 0} kcal
+                                                    </span>
+                                                </div>
+
+                                                {/* Rating */}
+                                                <div className="flex items-center gap-1.5">
+                                                    <FaStar/>
+
+                                                    <span className="font-medium text-white">
+                                                        {exercise.rating?.toFixed(1) ?? 'N/A'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="flex items-center gap-3">
+
+                                            {/* View Details */}
+                                            <Link href={`/exercises/${exercise.id}`}
+                                                type="button"
+                                                className="inline-block text-sm px-6 py-2.5 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition font-medium"
+                                            >
+                                                View Details
+                                            </Link>
+
+                                            {/* Mark as Done */}
+                                            <button
+                                                type="button"
+                                                className="flex items-center gap-1.5 text-sm px-6 py-2.5 rounded-full bg-[#CCEE22] text-black font-extrabold hover:bg-[#BBDD11] transition"
+                                            >
+                                                <FaCheck />
+
+                                                <span>Mark as Done</span>
+                                            </button>
+                                            <RxCross2 />
+                                        </div>
+                                    </div>
+                                ))) : (
+                                    <div className='text-center py-10'>
+                                        <h2 className={`${oswald.className} text-3xl`} >NOTHING HERE YET.</h2>
+                                        <p className='text-gray-500'>Browse the library and add a lift to get today moving.</p>
+                                        <Link href={'/'} className='inline-block bg bg-lime-500 px-4 py-3 rounded-2xl mt-6 text-black' >Go to workouts</Link>
+                                    </div>
+
+
+                                )
                         }
                     </div>
 
@@ -119,41 +188,97 @@ const MyPlanPage = () => {
                     />
                     <div className="tab-content bg-base-100 border-base-300 p-6">
                         {
-                        saveList.length > 0 ?
-                        (activeExercises.map((exercise, index) => (
-                            <div
-                                key={exercise.id}
-                                className='border p-5 rounded-lg'
-                            >
-                                <p className='text-gray-500'>
-                                    Exercise {index + 1}
-                                </p>
+                            saveList.length > 0 ?
 
-                                <h2 className='text-xl font-bold'>
-                                    {exercise.name}
-                                </h2>
+                                (activeExercises.map((exercise) => (
+                                     <div
+                                        key={exercise.id}
+                                        className="bg-black/95 text-gray-100 p-5 rounded-2xl flex items-center gap-6 shadow-xl border border-gray-800"
+                                    >
+                                        {/* Exercise Image */}
+                                        <div className="w-24 h-24 overflow-hidden rounded-xl bg-gray-900 flex-shrink-0">
+                                            <Image
+                                                src={exercise.image}
+                                                alt={exercise.name}
+                                                width={96}
+                                                height={96}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
 
-                                <div className='flex gap-6 mt-2 text-gray-500'>
-                                    <p>{exercise.duration} minutes</p>
-                                    <p>{exercise.caloriesBurned} calories</p>
-                                </div>
-                            </div>
-                        ))): (
-                            <div className='text-center py-10'>
-                                 <h2 className={`${oswald.className} text-3xl`} >NOTHING HERE YET.</h2>
-                                 <p className='text-gray-500'>Browse the library and add a lift to get today moving.</p>
-                                 <Link href={'/'} className='inline-block bg bg-lime-500 px-4 py-3 rounded-2xl mt-6 text-black' >Go to workouts</Link>
-                            </div>
-                        )
+                                        {/* Exercise Details */}
+                                        <div className="flex-1 space-y-2">
+                                            <h2 className="text-xl font-extrabold uppercase tracking-tight text-white">
+                                                {exercise.name}
+                                            </h2>
+
+                                            <p className="text-sm font-medium text-gray-400 capitalize">
+                                                {exercise.equipment}
+                                            </p>
+
+                                            {/* Stats */}
+                                            <div className="flex items-center gap-5 mt-2 text-sm text-gray-300">
+
+                                                {/* Time */}
+                                                <div className="flex items-center gap-1.5">
+                                        
+                                                    <FaClock/>
+                                                    <span>
+                                                        {exercise.duration ?? 0} min
+                                                    </span>
+                                                </div>
+
+                                                {/* Calories */}
+                                                <div className="flex items-center gap-1.5">
+                                                    <FaFire/>
+
+                                                    <span>
+                                                        {exercise.caloriesBurned ?? 0} kcal
+                                                    </span>
+                                                </div>
+
+                                                {/* Rating */}
+                                                <div className="flex items-center gap-1.5">
+                                                    <FaStar/>
+
+                                                    <span className="font-medium text-white">
+                                                        {exercise.rating?.toFixed(1) ?? 'N/A'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="flex items-center gap-3">
+
+                                            {/* View Details */}
+                                            <Link href={`/exercises/${exercise.id}`}
+                                                type="button"
+                                                className="inline-block text-sm px-6 py-2.5 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition font-medium"
+                                            >
+                                                View Details
+                                            </Link>
+
+                                            <RxCross2 />
+                                        </div>
+                                    </div>
+                                )))
+                                : (
+                                    <div className='text-center py-10'>
+                                        <h2 className={`${oswald.className} text-3xl`} >NOTHING HERE YET.</h2>
+                                        <p className='text-gray-500'>Browse the library and add a lift to get today moving.</p>
+                                        <Link href={'/'} className='inline-block bg bg-lime-500 px-4 py-3 rounded-2xl mt-6 text-black' >Go to workouts</Link>
+                                    </div>
+                                )
                         }
                     </div>
 
                 </div>
 
-                
 
-                </div>
+
             </div>
+        </div>
         // </div>
     );
 };
